@@ -306,25 +306,25 @@ class Loon extends AbstractProtocol
 	}
 
     public static function buildAnyTLS($password, $server)
-    {
-        $protocol_settings = data_get($server, 'protocol_settings', []);
+{
+    $protocol_settings = data_get($server, 'protocol_settings', []);
 
-        $config = [
-            "{$server['name']}=AnyTLS",
-            "{$server['host']}",
-            "{$server['port']}",
-            "\"{$password}\"",
-        ];
+    $config = [
+        "{$server['name']}=anytls",
+        "{$server['host']}",
+        "{$server['port']}",
+        "password=\"{$password}\"",
+    ];
 
-        if ($serverName = data_get($protocol_settings, 'tls.server_name')) {
-            $config[] = "sni={$serverName}";
-        }
-        $config[] = "skip-cert-verify=" . (data_get($protocol_settings, 'tls.allow_insecure', false) ? "true" : "false");
-
-        $config = array_filter($config);
-        $uri = implode(',', $config) . "\r\n";
-        return $uri;
+    if ($serverName = data_get($protocol_settings, 'tls.server_name')) {
+        $config[] = "sni={$serverName}";
     }
+
+    $config[] = "skip-cert-verify=" . (data_get($protocol_settings, 'tls.allow_insecure', false) ? "true" : "false");
+
+    $config = array_filter($config);
+    return implode(',', $config) . "\r\n";
+}
 
     public static function buildHysteria($password, $server, $user)
     {
